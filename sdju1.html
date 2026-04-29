@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入校申请系统</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial;
+  background:#f5f5f5;
+  color:#222;
+}
+.phone{
+  max-width:430px;
+  margin:0 auto;
+  min-height:100vh;
+  background:#fff;
+}
+
+/* 入口页 */
+.welcome{
+  min-height:100vh;
+  background:linear-gradient(180deg,#3499f4,#f5f5f5 55%);
+  padding:70px 24px 30px;
+}
+.welcome-card{
+  background:#fff;
+  border-radius:18px;
+  padding:30px 22px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+.welcome-title{
+  text-align:center;
+  font-size:25px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+.welcome-sub{
+  text-align:center;
+  color:#888;
+  margin-bottom:30px;
+}
+.input-title{
+  font-size:17px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+.plate-input{
+  width:100%;
+  height:50px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:0 14px;
+  font-size:20px;
+  outline:none;
+}
+.plate-input:focus{
+  border-color:#3499f4;
+}
+.quick-title{
+  margin-top:20px;
+  color:#777;
+  font-size:15px;
+}
+.quick{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:10px;
+}
+.quick span{
+  background:#eef6ff;
+  color:#168dff;
+  padding:8px 14px;
+  border-radius:18px;
+  font-size:15px;
+}
+.btn{
+  margin-top:28px;
+  width:100%;
+  height:50px;
+  border:none;
+  border-radius:25px;
+  background:#168dff;
+  color:#fff;
+  font-size:19px;
+  font-weight:700;
+}
+.error{
+  color:#e53935;
+  font-size:14px;
+  margin-top:10px;
+  display:none;
+}
+
+/* 主系统 */
+.system{
+  display:none;
+}
+.nav{
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-bottom:1px solid #eee;
+  background:#fff;
+}
+.close{
+  position:absolute;
+  left:20px;
+  font-size:28px;
+}
+.more{
+  position:absolute;
+  right:20px;
+  font-size:24px;
+}
+.nav-title{
+  text-align:center;
+  font-size:20px;
+  font-weight:700;
+}
+.nav-sub{
+  font-size:12px;
+  color:#999;
+  text-align:center;
+  margin-top:3px;
+}
+.tabs{
+  height:48px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  font-size:18px;
+  background:#fff;
+}
+.tabs .active{
+  color:#168dff;
+  font-weight:700;
+}
+.filter{
+  height:72px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #eee;
+  font-size:17px;
+  font-weight:600;
+  background:#fff;
+}
+.switch{
+  width:54px;
+  height:28px;
+  background:#f1f1f1;
+  border-radius:20px;
+  position:relative;
+}
+.switch:after{
+  content:"";
+  width:28px;
+  height:28px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  left:0;
+  top:0;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+.list-wrap{
+  padding:20px 17px;
+  background:#f5f5f5;
+  min-height:calc(100vh - 182px);
+}
+.blue-card{
+  background:#3499f4;
+  color:white;
+  border-radius:9px 9px 0 0;
+  padding:18px 17px 25px;
+}
+.tag{
+  display:inline-block;
+  background:rgba(0,0,0,.12);
+  border-radius:14px;
+  padding:8px 18px;
+  font-size:17px;
+}
+.plate{
+  float:right;
+  border:1.5px solid white;
+  border-radius:10px;
+  padding:7px 11px;
+  font-size:16px;
+}
+.name{
+  margin-top:22px;
+  font-size:23px;
+}
+.phone-num{
+  font-size:21px;
+  margin-top:8px;
+}
+.row{
+  font-size:18px;
+  margin-top:16px;
+}
+.pass{
+  float:right;
+  margin-top:-43px;
+  background:#19c63b;
+  border-radius:22px;
+  padding:8px 24px;
+  font-size:17px;
+}
+.qr-link{
+  height:60px;
+  background:white;
+  color:#168dff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:18px;
+  border-radius:0 0 10px 10px;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+/* 二维码页 */
+.qr-page{
+  display:none;
+  background:#3e8eea;
+  min-height:100vh;
+}
+.ticket{
+  padding:24px 26px;
+}
+.main-card{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+}
+.person{
+  height:116px;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  border-bottom:1px dashed #4bb4db;
+}
+.avatar{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#26a8df;
+  margin-right:16px;
+}
+.person-name{
+  font-size:22px;
+  margin-bottom:8px;
+}
+.person-phone{
+  color:#999;
+  font-size:17px;
+}
+.center{
+  text-align:center;
+  padding:30px 0;
+}
+.date,.time,.car{
+  font-size:27px;
+  font-weight:800;
+  margin-bottom:23px;
+}
+.ok{
+  color:#18b966;
+  font-size:24px;
+  font-weight:800;
+}
+.detail-card{
+  margin-top:16px;
+  background:white;
+  border-radius:12px;
+  padding:18px 22px;
+}
+.detail-row{
+  display:flex;
+  justify-content:space-between;
+  margin:18px 0;
+  color:#888;
+  font-size:17px;
+}
+.detail-row span:last-child{
+  color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+<!-- 入口页 -->
+<section id="welcomePage" class="welcome">
+  <div class="welcome-card">
+    <div class="welcome-title">欢迎使用入校申请系统</div>
+    <div class="welcome-sub">请输入车牌号进入系统</div>
+
+    <div class="input-title">车牌号码</div>
+    <input id="welcomePlateInput" class="plate-input" placeholder="例如：皖G12164">
+
+    <div class="error" id="plateError">请输入车牌号</div>
+
+    <div class="quick-title">常用车牌</div>
+    <div class="quick" id="quickPlates"></div>
+
+    <button class="btn" onclick="enterSystem()">确定</button>
+  </div>
+</section>
+
+<!-- 列表页 -->
+<section id="listPage" class="system">
+
+  <div class="nav">
+    <div class="close" onclick="backWelcome()">×</div>
+    <div>
+      <div class="nav-title">入校申请</div>
+      <div class="nav-sub">campus visitor system</div>
+    </div>
+    <div class="more">···</div>
+  </div>
+
+  <div class="tabs">
+    <div>申请</div>
+    <div class="active">我的</div>
+  </div>
+
+  <div class="filter">
+    <div>审核筛选</div>
+    <div>可用记录</div>
+    <div class="switch"></div>
+    <div>不可用记录</div>
+  </div>
+
+  <div class="list-wrap">
+    <div class="blue-card">
+      <div class="tag">访客</div>
+      <div class="plate" id="cardPlate">🚗｜皖G12164</div>
+
+      <div class="name">张萍</div>
+      <div class="phone-num">13399623318</div>
+
+      <div class="row">访问部门： 机械学院</div>
+      <div class="row" id="listDate">访问时间：</div>
+
+      <div class="pass">通过</div>
+    </div>
+
+    <div class="qr-link" onclick="showQR()">点击查看入校二维码</div>
+  </div>
+
+</section>
+
+<!-- 二维码页 -->
+<section id="qrPage" class="qr-page">
+
+  <div class="nav">
+    <div class="close" onclick="showList()">×</div>
+    <div>
+      <div class="nav-title">入校二维码</div>
+      <div class="nav-sub">campus visitor system</div>
+    </div>
+    <div class="more">···</div>
+  </div>
+
+  <div class="ticket">
+
+    <div class="main-card">
+      <div class="person">
+        <div class="avatar"></div>
+        <div>
+          <div class="person-name">张萍</div>
+          <div class="person-phone">13399623318</div>
+        </div>
+      </div>
+
+      <div class="center">
+        <div class="date" id="qrDate"></div>
+        <div class="time" id="liveTime"></div>
+        <div class="car" id="qrPlate">皖G12164</div>
+        <div class="ok">审核通过</div>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-row"><span>📅 入校日期：</span><span id="detailDate"></span></div>
+      <div class="detail-row"><span>🏢 访问部门：</span><span>机械学院</span></div>
+      <div class="detail-row"><span>👤 接待人：</span><span>严屹宏</span></div>
+      <div class="detail-row"><span>🔗 入校事由：</span><span>拜访教师</span></div>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<script>
+let currentPlate = localStorage.getItem("currentPlate") || "";
+let savedPlates = JSON.parse(localStorage.getItem("savedPlates") || "[]");
+
+function pad(n){
+  return n < 10 ? "0" + n : n;
+}
+
+function updateTime(){
+  const d = new Date();
+
+  const y = d.getFullYear();
+  const m = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+
+  const h = pad(d.getHours());
+  const min = pad(d.getMinutes());
+  const s = pad(d.getSeconds());
+
+  const cnDate = `${y}年${m}月${day}日`;
+  const dashDate = `${y}-${m}-${day}~${y}-${m}-${day}`;
+  const dotDate = `${y}.${m}.${day}~${y}.${m}.${day}`;
+
+  document.getElementById("liveTime").innerText = `${h}:${min}:${s}`;
+  document.getElementById("listDate").innerText = `访问时间： ${dashDate}`;
+  document.getElementById("qrDate").innerText = cnDate;
+  document.getElementById("detailDate").innerText = dotDate;
+}
+
+function renderQuickPlates(){
+  const box = document.getElementById("quickPlates");
+  box.innerHTML = "";
+
+  if(savedPlates.length === 0){
+    box.innerHTML = '<span onclick="selectPlate(\'皖G12164\')">皖G12164</span>';
+    return;
+  }
+
+  savedPlates.forEach(plate=>{
+    const span = document.createElement("span");
+    span.innerText = plate;
+    span.onclick = function(){
+      selectPlate(plate);
+    };
+    box.appendChild(span);
+  });
+}
+
+function selectPlate(plate){
+  document.getElementById("welcomePlateInput").value = plate;
+}
+
+function savePlate(plate){
+  plate = plate.trim().toUpperCase();
+  currentPlate = plate;
+
+  localStorage.setItem("currentPlate", plate);
+
+  savedPlates = savedPlates.filter(p => p !== plate);
+  savedPlates.unshift(plate);
+  savedPlates = savedPlates.slice(0, 8);
+
+  localStorage.setItem("savedPlates", JSON.stringify(savedPlates));
+}
+
+function updatePlateUI(){
+  document.getElementById("cardPlate").innerText = `🚗｜${currentPlate}`;
+  document.getElementById("qrPlate").innerText = currentPlate;
+}
+
+function enterSystem(){
+  const input = document.getElementById("welcomePlateInput");
+  const error = document.getElementById("plateError");
+  const plate = input.value.trim();
+
+  if(!plate){
+    error.style.display = "block";
+    return;
+  }
+
+  error.style.display = "none";
+
+  savePlate(plate);
+  updatePlateUI();
+  renderQuickPlates();
+
+  document.getElementById("welcomePage").style.display = "none";
+  document.getElementById("listPage").style.display = "block";
+  document.getElementById("qrPage").style.display = "none";
+}
+
+function backWelcome(){
+  document.getElementById("welcomePage").style.display = "block";
+  document.getElementById("listPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "none";
+  document.getElementById("welcomePlateInput").value = currentPlate;
+  renderQuickPlates();
+}
+
+function showQR(){
+  updatePlateUI();
+  document.getElementById("listPage").style.display = "none";
+  document.getElementById("qrPage").style.display = "block";
+}
+
+function showList(){
+  document.getElementById("qrPage").style.display = "none";
+  document.getElementById("listPage").style.display = "block";
+}
+
+document.getElementById("welcomePlateInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    enterSystem();
+  }
+});
+
+if(currentPlate){
+  document.getElementById("welcomePlateInput").value = currentPlate;
+}
+
+renderQuickPlates();
+updateTime();
+setInterval(updateTime,1000);
+</script>
+
+</body>
+</html>
